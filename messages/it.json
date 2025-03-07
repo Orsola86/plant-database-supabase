@@ -1,0 +1,11 @@
+{
+  "buttons": {
+    "download": "Scarica il file",
+    "open-new-tabs": "Il link verrà aperto in una nuova finestra",
+    "read-more": "Leggi di più",
+    "read-all": "Leggi tutto",
+    "showAll": "Vedi tutto",
+    "filter": "Filtra",
+    "goBack": "Torna indietro"
+  }
+}

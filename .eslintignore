@@ -1,0 +1,9 @@
+.next
+commitlint.config.*
+next-env.d.ts
+node_modules
+tailwind.config.ts
+package-lock.json
+public
+src/api/generated/**/*
+yarn.lock

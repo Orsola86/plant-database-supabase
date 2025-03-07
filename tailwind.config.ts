@@ -1,24 +1,44 @@
 import type { Config } from "tailwindcss";
+import {
+  animations,
+  colors,
+  containerStyles,
+  focusStyle,
+  gridStyles,
+  headingStyles,
+} from "./src/lib/tailwind";
+import { PluginAPI } from "tailwindcss/types/config";
 
 const config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  safelist: [
+    {
+      pattern: /([^\s]+)?bg-\S+/,
+    },
+    {
+      pattern: /([^\s]+)?heading-\S+/,
+    },
+    {
+      pattern: /([^\s]+)?text-\S+/,
+    },
+    {
+      pattern: /([^\s]+)?txt-\S+/,
+    },
+    {
+      pattern: /([^\s]+)?--\S+/,
+    },
   ],
   prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
+        ...colors,
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -74,7 +94,35 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwindcss-aria-attributes"),
+    ({ addBase }: PluginAPI) => {
+      addBase({
+        html: {
+          fontSize: "62.5%",
+          fontFamily: "var(--font-roboto)",
+        },
+      });
+    },
+    ({ addUtilities }: PluginAPI) => {
+      addUtilities({
+        ...animations,
+        ...gridStyles,
+        ...focusStyle,
+        ...headingStyles,
+      });
+    },
+    ({ addComponents }: PluginAPI) => {
+      addComponents({
+        ...containerStyles,
+      });
+    },
+    ({ addVariant }: PluginAPI) => {
+      addVariant("interactive", ["&:hover", "&:active"]);
+      addVariant("group-interactive", [".group:hover &", ".group:active &"]);
+    },
+  ],
 } satisfies Config;
 
 export default config;
