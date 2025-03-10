@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { signOutAction } from "@/src/app/actions";
-import { hasEnvVars } from "@/src/utils/supabase/check-env-vars";
-import { createClient } from "@/src/utils/supabase/server";
+import { hasEnvVars } from "@/utils/supabase/check-env-vars";
+import { createClient } from "@/utils/supabase/server";
+import { Button } from "@/components/atoms/button";
+import { Badge } from "@/components/molecules/badge";
+import { signOutAction } from "@/app/actions";
 
 export default async function AuthButton() {
   const supabase = await createClient();

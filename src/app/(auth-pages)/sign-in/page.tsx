@@ -1,12 +1,23 @@
 import Link from "next/link";
-import { signInAction } from "@/src/app/actions";
-import { FormMessage, Message } from "@/src/components/form-message";
-import { SubmitButton } from "@/src/components/submit-button";
-import { Input } from "@/src/components/ui/input";
-import { Label } from "@/src/components/ui/label";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { FormMessage, Message } from "@/components/atoms/form-message";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import { SubmitButton } from "@/components/atoms/submit-button";
+import { signInAction } from "@/app/actions";
 
 export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    return redirect("/protected");
+  }
+
   return (
     <form className="flex min-w-64 flex-1 flex-col">
       <h1 className="text-2xl font-medium">Sign in</h1>

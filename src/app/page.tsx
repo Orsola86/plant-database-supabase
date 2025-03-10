@@ -1,15 +1,22 @@
-import Hero from "@/src/components/hero";
-import ConnectSupabaseSteps from "@/src/components/tutorial/connect-supabase-steps";
-import SignUpUserSteps from "@/src/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/src/utils/supabase/check-env-vars";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { Heading } from "../components/atoms/Heading/Heading";
 
 export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    return redirect("/protected");
+  }
+
   return (
     <>
-      <Hero />
       <main className="flex flex-1 flex-col gap-6 px-4">
-        <h2 className="mb-4 text-xl font-medium">Next steps</h2>
-        {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
+        <Heading as="h1">
+          Plant Database. Effettua il login per accedere all`area riservata
+        </Heading>
       </main>
     </>
   );

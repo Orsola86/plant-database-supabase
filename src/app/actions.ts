@@ -2,8 +2,8 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createClient } from "@/src/utils/supabase/server";
-import { encodedRedirect } from "@/src/utils/utils";
+import { createClient } from "@/utils/supabase/server";
+import { encodedRedirect } from "@/utils/utils";
 
 export const getCollection = async () => {
   const supabase = await createClient();

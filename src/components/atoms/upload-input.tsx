@@ -1,8 +1,8 @@
 import { ComponentProps } from "react";
-import { Button } from "@/src/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/src/components/ui/card";
-import { Input } from "@/src/components/ui/input";
-import { Label } from "@/src/components/ui/label";
+import { Button } from "@/components/atoms/button";
+import { Input } from "@/components/atoms/input";
+import { Label } from "@/components/atoms/label";
+import { Card, CardContent, CardFooter } from "@/components/molecules/card";
 
 export default function UploadInput() {
   return (

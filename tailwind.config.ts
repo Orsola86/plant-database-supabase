@@ -38,7 +38,7 @@ const config = {
   theme: {
     extend: {
       colors: {
-        ...colors,
+        // ...colors,
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -100,7 +100,7 @@ const config = {
     ({ addBase }: PluginAPI) => {
       addBase({
         html: {
-          fontSize: "62.5%",
+          // fontSize: "62.5%",
           fontFamily: "var(--font-roboto)",
         },
       });

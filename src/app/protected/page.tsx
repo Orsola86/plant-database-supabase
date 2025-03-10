@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import UploadInput from "@/components/atoms/upload-input";
 import { getCollection } from "../actions";
-import UploadInput from "@/src/components/upload-input";
-import { createClient } from "@/src/utils/supabase/server";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
