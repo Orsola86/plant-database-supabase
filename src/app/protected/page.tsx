@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import UploadInput from "@/components/atoms/upload-input";
-import { getCollection } from "../actions";
+import { PlantCard } from "@/components/molecules/plant-card";
+import Hero from "@/components/organisms/hero";
+import { getCollections } from "@/app/orchid-action/orchidActions";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -14,12 +15,23 @@ export default async function ProtectedPage() {
     return redirect("/sign-in");
   }
 
-  const orchids = await getCollection();
+  const orchids = await getCollections();
 
   return (
-    <div className="flex w-full flex-1 flex-col gap-12">
-      {orchids?.map((orchid) => <div key={orchid.id}>{orchid.species}</div>)}
-      <UploadInput />
-    </div>
+    <>
+      <Hero />
+      <div className="container py-16">
+        <div className="default-grid">
+          {!!orchids?.length &&
+            orchids?.map((orchid) => (
+              <PlantCard
+                className="col-span-full md:col-span-6 lg:col-span-4"
+                plant={orchid}
+                key={orchid?.id}
+              />
+            ))}
+        </div>
+      </div>
+    </>
   );
 }

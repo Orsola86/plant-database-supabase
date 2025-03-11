@@ -5,25 +5,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { encodedRedirect } from "@/utils/utils";
 
-export const getCollection = async () => {
-  const supabase = await createClient();
-  const userId = (await supabase.auth.getUser()).data.user?.id || "";
-
-  const { data: plantCollection, error } = await supabase
-    .from("plant-taxonomy")
-    .select("*")
-    .eq("user_id", userId);
-
-  if (plantCollection) {
-    return plantCollection;
-  }
-
-  if (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch total number of invoices.");
-  }
-};
-
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
