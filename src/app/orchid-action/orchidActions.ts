@@ -1,6 +1,97 @@
 "use server";
 
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+
+// Schema di validazione per il form
+const OrchidFormSchema = z.object({
+  family: z.string().min(1, "La famiglia è obbligatoria"),
+  genus: z.string().optional(),
+  species: z.string().min(1, "La specie è obbligatoria"),
+  // image_url: z
+  //   .string()
+  //   .url("L'URL dell'immagine non è valido")
+  //   .optional()
+  //   .or(z.literal("")),
+});
+
+export type OrchidFormState = {
+  errors?: {
+    family?: string[];
+    genus?: string[];
+    species?: string[];
+    // image_url?: string[];
+  };
+  message?: string | null;
+};
+
+export async function addOrchid(
+  prevState: OrchidFormState,
+  formData: FormData
+): Promise<OrchidFormState> {
+  // Validazione dei dati del form
+  const validatedFields = OrchidFormSchema.safeParse({
+    family: formData.get("family"),
+    genus: formData.get("genus"),
+    species: formData.get("species"),
+    // image_url: formData.get("image_url"),
+  });
+
+  // Se la validazione fallisce, restituisci gli errori
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Dati mancanti o non validi. Impossibile aggiungere l'orchidea.",
+    };
+  }
+
+  // Estrai i dati validati
+  const { family, genus, species } = validatedFields.data;
+
+  // Crea il client Supabase
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      message: "Utente non autenticato",
+      errors: {},
+    };
+  }
+
+  try {
+    await supabase
+      .from("plant-taxonomy")
+      .insert([
+        {
+          family,
+          genus: genus || null,
+          species,
+          // image_url: imageUrl || null,
+          user_id: user.id,
+        },
+      ])
+      .select();
+  } catch (error) {
+    return {
+      message: "Errore durante l'aggiunta dell'orchidea.",
+      errors: {},
+    };
+  }
+
+  // Aggiorna la cache e reindirizza l'utente
+  revalidatePath("/protected");
+  redirect("/protected");
+
+  return {
+    message: "Orchidea aggiunta con successo",
+    errors: {},
+  };
+}
 
 export const getCollections = async () => {
   const supabase = await createClient();

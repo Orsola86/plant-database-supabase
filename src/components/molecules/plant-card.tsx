@@ -26,7 +26,7 @@ export function PlantCard({
         <div className="relative aspect-square w-full overflow-hidden">
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/30 to-transparent" />
           <Image
-            src={plantPlaceholderImg.src}
+            src={plant.image_url || plantPlaceholderImg.src}
             alt={plant?.species || ""}
             fill
             className="object-cover transition-transform duration-500 hover:scale-110"

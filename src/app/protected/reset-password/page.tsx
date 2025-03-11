@@ -1,5 +1,5 @@
 import { FormMessage, Message } from "@/components/atoms/form-message";
-import { Input } from "@/components/atoms/input";
+import { Input } from "@/components/atoms/inputs/input";
 import { Label } from "@/components/atoms/label";
 import { SubmitButton } from "@/components/atoms/submit-button";
 import { resetPasswordAction } from "@/app/actions";

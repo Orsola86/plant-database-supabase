@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, Droplets, Sun, Thermometer, Wind } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/atoms/button";
-import { Card, CardContent } from "@/components/molecules/card";
+import { CareCard } from "@/components/molecules/CareCard";
 import { getPlantById } from "@/app/orchid-action/orchidActions";
 import plantPlaceholderImg from "../../../../public/plant-7396967_1920.jpg";
 
@@ -113,7 +113,7 @@ export default async function PlantDetailPage({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl shadow-xl">
             <Image
-              src={plantPlaceholderImg.src}
+              src={currentPlant?.image_url || plantPlaceholderImg.src}
               alt={currentPlant?.species || ""}
               fill
               className="object-cover"
@@ -140,61 +140,27 @@ export default async function PlantDetailPage({
             </div>
 
             <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
-              <Card>
-                <CardContent className="flex items-center space-x-3 p-4">
-                  <div className="rounded-full bg-green-100 p-2">
-                    <Sun className="h-5 w-5 text-green-700" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Luce</p>
-                    <p className="text-sm text-muted-foreground">
-                      {details?.care?.light}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              <CareCard
+                icon={{ color: "green", name: "Sun" }}
+                title="Luce"
+                description={details.care?.light}
+              />
 
-              <Card>
-                <CardContent className="flex items-center space-x-3 p-4">
-                  <div className="rounded-full bg-blue-100 p-2">
-                    <Droplets className="h-5 w-5 text-blue-700" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Acqua</p>
-                    <p className="text-sm text-muted-foreground">
-                      {details?.care?.water}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="flex items-center space-x-3 p-4">
-                  <div className="rounded-full bg-red-100 p-2">
-                    <Thermometer className="h-5 w-5 text-red-700" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Temperatura</p>
-                    <p className="text-sm text-muted-foreground">
-                      {details?.care?.temperature}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="flex items-center space-x-3 p-4">
-                  <div className="rounded-full bg-purple-100 p-2">
-                    <Wind className="h-5 w-5 text-purple-700" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Umidità</p>
-                    <p className="text-sm text-muted-foreground">
-                      {details?.care?.humidity}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              <CareCard
+                icon={{ color: "blue", name: "Droplets" }}
+                title="Acqua"
+                description={details.care?.water}
+              />
+              <CareCard
+                icon={{ color: "red", name: "Thermometer" }}
+                title="Temperatura"
+                description={details.care?.temperature}
+              />
+              <CareCard
+                icon={{ color: "purple", name: "Wind" }}
+                title="Umidità"
+                description={details.care?.humidity}
+              />
             </div>
 
             <div className="grid grid-cols-3 gap-4 pt-4">

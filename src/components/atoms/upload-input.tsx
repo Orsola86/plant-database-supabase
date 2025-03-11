@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
 import { Button } from "@/components/atoms/button";
-import { Input } from "@/components/atoms/input";
+import { Input } from "@/components/atoms/inputs/input";
 import { Label } from "@/components/atoms/label";
 import { Card, CardContent, CardFooter } from "@/components/molecules/card";
 
