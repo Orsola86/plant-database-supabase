@@ -4,66 +4,65 @@ import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/atoms/button";
-import { CareCard } from "@/components/molecules/CareCard";
 import { getPlantById } from "@/app/orchid-action/orchidActions";
 import plantPlaceholderImg from "../../../../public/plant-7396967_1920.jpg";
 
-// Informazioni aggiuntive per ogni orchidea
-const plantDetails = {
-  "2ff41d41-0726-4ae0-95b7-d856b4a02e67": {
-    description:
-      "La Phalaenopsis gibbosa è una specie di orchidea originaria del Sud-est asiatico. È caratterizzata da fiori piccoli ma numerosi, con petali e sepali di colore bianco-verdastro e un labello viola-rosso. Il nome 'gibbosa' deriva dalla protuberanza presente sul labello.",
-    care: {
-      light: "Luce indiretta brillante, evitare il sole diretto",
-      water:
-        "Annaffiare quando il substrato è quasi asciutto, circa ogni 7-10 giorni",
-      temperature: "18-29°C, ideale 22°C",
-      humidity: "60-80%",
-    },
-    origin: "Sud-est asiatico (Vietnam, Thailandia)",
-    bloomingSeason: "Primavera-Estate",
-    difficulty: "Media",
-  },
-  "3ff41d41-0726-4ae0-95b7-d856b4a02e68": {
-    description:
-      "Il Dendrobium nobile è una delle orchidee più popolari del genere Dendrobium. Produce fiori profumati in vari colori, dal bianco al viola, spesso con un centro scuro. I fiori crescono lungo gli pseudobulbi e possono durare diverse settimane.",
-    care: {
-      light: "Luce brillante ma filtrata, alcune ore di sole mattutino",
-      water: "Abbondante durante la crescita, ridotta in inverno",
-      temperature: "12-24°C, periodo di riposo invernale a 10-13°C",
-      humidity: "50-70%",
-    },
-    origin: "Asia (Himalaya, Cina, India)",
-    bloomingSeason: "Fine inverno-Primavera",
-    difficulty: "Media-Alta",
-  },
-  "4ff41d41-0726-4ae0-95b7-d856b4a02e69": {
-    description:
-      "La Cattleya labiata è considerata la 'regina delle orchidee' per i suoi fiori grandi e vistosi, spesso profumati. I fiori possono raggiungere i 20 cm di diametro, con colori che variano dal rosa al viola intenso, con un labello spesso più scuro e striato.",
-    care: {
-      light: "Luce intensa ma non diretta, tollera alcune ore di sole filtrato",
-      water: "Lasciare asciugare tra un'annaffiatura e l'altra",
-      temperature: "16-27°C, con escursione termica giorno-notte",
-      humidity: "50-70%",
-    },
-    origin: "Brasile",
-    bloomingSeason: "Autunno",
-    difficulty: "Media-Alta",
-  },
-  "5ff41d41-0726-4ae0-95b7-d856b4a02e70": {
-    description:
-      "La Vanda coerulea, nota come 'Orchidea Blu', è famosa per il suo raro colore blu-violaceo. È un'orchidea epifita con radici aeree e fiori grandi e vistosi che possono durare fino a 6 settimane.",
-    care: {
-      light: "Molta luce, incluso alcune ore di sole diretto filtrato",
-      water: "Frequente, immersione delle radici o nebulizzazione quotidiana",
-      temperature: "18-32°C, minima notturna 15°C",
-      humidity: "70-80%",
-    },
-    origin: "India, Myanmar, Thailandia",
-    bloomingSeason: "Estate-Autunno",
-    difficulty: "Alta",
-  },
-};
+// // Informazioni aggiuntive per ogni orchidea
+// const plantDetails = {
+//   "2ff41d41-0726-4ae0-95b7-d856b4a02e67": {
+//     description:
+//       "La Phalaenopsis gibbosa è una specie di orchidea originaria del Sud-est asiatico. È caratterizzata da fiori piccoli ma numerosi, con petali e sepali di colore bianco-verdastro e un labello viola-rosso. Il nome 'gibbosa' deriva dalla protuberanza presente sul labello.",
+//     care: {
+//       light: "Luce indiretta brillante, evitare il sole diretto",
+//       water:
+//         "Annaffiare quando il substrato è quasi asciutto, circa ogni 7-10 giorni",
+//       temperature: "18-29°C, ideale 22°C",
+//       humidity: "60-80%",
+//     },
+//     origin: "Sud-est asiatico (Vietnam, Thailandia)",
+//     bloomingSeason: "Primavera-Estate",
+//     difficulty: "Media",
+//   },
+//   "3ff41d41-0726-4ae0-95b7-d856b4a02e68": {
+//     description:
+//       "Il Dendrobium nobile è una delle orchidee più popolari del genere Dendrobium. Produce fiori profumati in vari colori, dal bianco al viola, spesso con un centro scuro. I fiori crescono lungo gli pseudobulbi e possono durare diverse settimane.",
+//     care: {
+//       light: "Luce brillante ma filtrata, alcune ore di sole mattutino",
+//       water: "Abbondante durante la crescita, ridotta in inverno",
+//       temperature: "12-24°C, periodo di riposo invernale a 10-13°C",
+//       humidity: "50-70%",
+//     },
+//     origin: "Asia (Himalaya, Cina, India)",
+//     bloomingSeason: "Fine inverno-Primavera",
+//     difficulty: "Media-Alta",
+//   },
+//   "4ff41d41-0726-4ae0-95b7-d856b4a02e69": {
+//     description:
+//       "La Cattleya labiata è considerata la 'regina delle orchidee' per i suoi fiori grandi e vistosi, spesso profumati. I fiori possono raggiungere i 20 cm di diametro, con colori che variano dal rosa al viola intenso, con un labello spesso più scuro e striato.",
+//     care: {
+//       light: "Luce intensa ma non diretta, tollera alcune ore di sole filtrato",
+//       water: "Lasciare asciugare tra un'annaffiatura e l'altra",
+//       temperature: "16-27°C, con escursione termica giorno-notte",
+//       humidity: "50-70%",
+//     },
+//     origin: "Brasile",
+//     bloomingSeason: "Autunno",
+//     difficulty: "Media-Alta",
+//   },
+//   "5ff41d41-0726-4ae0-95b7-d856b4a02e70": {
+//     description:
+//       "La Vanda coerulea, nota come 'Orchidea Blu', è famosa per il suo raro colore blu-violaceo. È un'orchidea epifita con radici aeree e fiori grandi e vistosi che possono durare fino a 6 settimane.",
+//     care: {
+//       light: "Molta luce, incluso alcune ore di sole diretto filtrato",
+//       water: "Frequente, immersione delle radici o nebulizzazione quotidiana",
+//       temperature: "18-32°C, minima notturna 15°C",
+//       humidity: "70-80%",
+//     },
+//     origin: "India, Myanmar, Thailandia",
+//     bloomingSeason: "Estate-Autunno",
+//     difficulty: "Alta",
+//   },
+// };
 
 interface PlantDetailPageProps {
   params: Promise<{ id: string }>;
@@ -86,17 +85,17 @@ export default async function PlantDetailPage({
 
   const plant = await getPlantById(id || "");
 
-  const currentPlant = plant?.[0];
-  const details = plantDetails[currentPlant?.id as keyof typeof plantDetails];
-  const formattedDate = new Date(
-    currentPlant?.created_at || ""
-  ).toLocaleDateString("it-IT", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  // const details = plantDetails[plant?.id as keyof typeof plantDetails];
+  const formattedDate = new Date(plant?.created_at || "").toLocaleDateString(
+    "it-IT",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
 
-  if (!currentPlant) {
+  if (!plant) {
     return <div className="container py-10">Orchidea non trovata</div>;
   }
 
@@ -113,8 +112,8 @@ export default async function PlantDetailPage({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl shadow-xl">
             <Image
-              src={currentPlant?.image_url || plantPlaceholderImg.src}
-              alt={currentPlant?.species || ""}
+              src={plant?.image_url || plantPlaceholderImg.src}
+              alt={plant?.species || ""}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -128,14 +127,14 @@ export default async function PlantDetailPage({
                 Aggiunta il {formattedDate}
               </p>
               <h1 className="mt-2 font-serif text-4xl font-bold">
-                {currentPlant?.species}
+                {plant?.species}
               </h1>
               <p className="mt-1 font-serif text-xl italic text-muted-foreground">
-                {currentPlant?.family}
+                {plant?.family}
               </p>
             </div>
 
-            <div className="prose prose-green max-w-none">
+            {/* <div className="prose prose-green max-w-none">
               <p>{details?.description}</p>
             </div>
 
@@ -182,7 +181,7 @@ export default async function PlantDetailPage({
                   {details?.difficulty}
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
