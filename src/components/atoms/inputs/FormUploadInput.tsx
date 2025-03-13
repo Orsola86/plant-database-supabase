@@ -179,11 +179,11 @@ export const FormUploadInput = ({
         ) : (
           <>
             <FileIcon className="h-12 w-12 text-gray-400" />
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-[1.4rem] font-medium text-gray-500">
               {isDragActive ? "Rilascia il file qui..." : placeholder}
             </span>
             {helperText && (
-              <span className="text-xs text-gray-500">{helperText}</span>
+              <span className="text-[1.4rem] text-gray-500">{helperText}</span>
             )}
           </>
         )}

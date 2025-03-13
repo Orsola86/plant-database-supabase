@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/molecules/card";
 import { Tables } from "@/types/database.types";
 import plantPlaceholderImg from "../../../public/plant-7396967_1920.jpg";
+import { Heading } from "../atoms/Heading/Heading";
+import { Text } from "../atoms/Text/Text";
 
 export type PlantCardProps = Tables<"plant-taxonomy">;
 
@@ -32,18 +34,25 @@ export function PlantCard({
             className="object-cover transition-transform duration-500 hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <div
-            className="absolute left-3 top-3 z-20 rounded-full bg-white/80 px-2 py-1 text-xs
-              backdrop-blur-sm"
+          <Text
+            as="span"
+            styledAs="body-sm-regular"
+            className="absolute left-3 top-3 z-20 rounded-full bg-white/80 px-4 py-1 backdrop-blur-sm"
           >
             {plant?.genus}
-          </div>
+          </Text>
         </div>
         <CardContent className="bg-white p-5">
-          <h3 className="text-lg font-medium">{plant?.species}</h3>
-          <p className="mt-1 font-serif text-sm italic text-muted-foreground">
+          <Heading as="h3" styledAs="h5">
+            {plant?.species}
+          </Heading>
+          <Text
+            as="span"
+            styledAs="body-md-regular"
+            className="mt-1 italic text-muted-foreground"
+          >
             {plant?.family}
-          </p>
+          </Text>
         </CardContent>
       </Card>
     </Link>

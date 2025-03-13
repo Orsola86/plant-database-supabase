@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PlusCircle } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
+import { Heading } from "@/components/atoms/Heading/Heading";
 import { Button } from "@/components/atoms/button";
 import { PlantCard } from "@/components/molecules/plant-card";
 import Hero from "@/components/organisms/hero";
@@ -25,7 +26,7 @@ export default async function ProtectedPage() {
       <Hero />
       <div className="container py-16">
         <div className="mb-8 flex flex-col-reverse gap-4 md:flex-row">
-          <h2 className="font-serif text-2xl font-bold">La tua collezione</h2>
+          <Heading as="h2">La tua collezione</Heading>
           <Link href="/protected/add-orchid" className="ml-auto">
             <Button className="flex items-center gap-2">
               <PlusCircle className="h-5 w-5" />

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
+import { Heading } from "@/components/atoms/Heading/Heading";
+import { Text } from "@/components/atoms/Text/Text";
 import { Button } from "@/components/atoms/button";
 import { getPlantById } from "@/app/orchid-action/orchidActions";
 import plantPlaceholderImg from "../../../../public/plant-7396967_1920.jpg";
@@ -131,15 +133,21 @@ export default async function PlantDetailPage({
 
           <div className="space-y-8">
             <div>
-              <p className="text-sm text-muted-foreground">
+              <Text
+                styledAs="body-sm-regular"
+                className="text-muted-foreground"
+              >
                 Aggiunta il {formattedDate}
-              </p>
-              <h1 className="mt-2 font-serif text-4xl font-bold">
+              </Text>
+              <Heading as="h1" className="mt-2 font-bold">
                 {plant?.species}
-              </h1>
-              <p className="mt-1 font-serif text-xl italic text-muted-foreground">
+              </Heading>
+              <Text
+                styledAs="body-md-regular"
+                className="mt-1 italic text-muted-foreground"
+              >
                 {plant?.family}
-              </p>
+              </Text>
             </div>
 
             {/* <div className="prose prose-green max-w-none">

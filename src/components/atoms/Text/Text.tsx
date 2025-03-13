@@ -24,10 +24,10 @@ export type TextProps<E extends ElementType> = TextOwnProps<E> &
 
 // Mappa delle classi per ogni dimensione
 const sizeClasses: Record<TextSize, string> = {
-  lg: "text-lg leading-7",
-  md: "text-base leading-6",
-  sm: "text-sm leading-5",
-  xs: "text-xs leading-4",
+  lg: "text-[1.375rem] md:text-[1.5rem] lg:text-[1.625rem]",
+  md: "text-[1.125rem] md:text-[1.25rem] lg:text-[1.375rem]",
+  sm: "text-[1rem] md:text-[1.0625rem] lg:text-[1.125rem]",
+  xs: "text-[0.875rem] md:text-[0.9375rem] lg:text-[1rem]",
 };
 
 // Mappa delle classi per ogni peso

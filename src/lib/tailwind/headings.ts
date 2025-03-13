@@ -1,22 +1,22 @@
 const headingStyles = {
   ".heading-h1": {
-    "@apply text-4xl md:text-5xl lg:text-6xl leading-tight": {},
+    "@apply text-[3rem] md:text-[3.5rem] lg:text-[4rem] leading-tight": {},
   },
   ".heading-h2": {
-    "@apply text-3xl md:text-4xl lg:text-5xl leading-tight": {},
+    "@apply text-[2rem] md:text-[2.5rem] lg:text-[3rem] leading-tight": {},
   },
   ".heading-h3": {
-    "@apply text-2xl md:text-3xl lg:text-4xl leading-tight": {},
+    "@apply text-[1.75rem] md:text-[2rem] lg:text-[2.5rem] leading-tight": {},
   },
   ".heading-h4": {
-    "@apply text-xl md:text-2xl lg:text-3xl leading-tight": {},
+    "@apply text-[1.5rem] md:text-[1.75rem] lg:text-[2rem] leading-tight": {},
   },
   ".heading-h5": {
-    "@apply text-lg md:text-xl lg:text-2xl leading-tight": {},
+    "@apply text-[1.25rem] md:text-[1.5rem] lg:text-[1.75rem] leading-tight":
+      {},
   },
   ".heading-h6": {
-    "@apply text-base md:text-lg lg:text-xl leading-tight": {},
+    "@apply text-[1rem] md:text-[1.25rem] lg:text-[1.5rem] leading-tight": {},
   },
 };
-
 export default headingStyles;

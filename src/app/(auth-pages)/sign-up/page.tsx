@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { Heading } from "@/components/atoms/Heading/Heading";
+import { Text } from "@/components/atoms/Text/Text";
 import { FormMessage, Message } from "@/components/atoms/form-message";
-import { Input } from "@/components/atoms/inputs/input";
-import { Label } from "@/components/atoms/label";
+import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { SubmitButton } from "@/components/atoms/submit-button";
 import { signUpAction } from "@/app/actions";
 import { SmtpMessage } from "../smtp-message";
@@ -21,24 +22,29 @@ export default async function Signup(props: {
   return (
     <>
       <form className="flex flex-col">
-        <h1 className="text-2xl font-medium">Sign up</h1>
-        <p className="text text-sm text-foreground">
+        <Heading as="h1">Sign up</Heading>
+
+        <Text styledAs="body-md-regular">
           Already have an account?{" "}
-          <Link className="font-medium text-primary underline" href="/sign-in">
+          <Link className="underline" href="/sign-in">
             Sign in
           </Link>
-        </p>
-        <div className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
-          <Label htmlFor="email">Email</Label>
-          <Input name="email" placeholder="you@example.com" required />
-          <Label htmlFor="password">Password</Label>
-          <Input
-            type="password"
+        </Text>
+        <div className="mt-12 flex flex-col gap-3 [&>input]:mb-5">
+          <FormInput
+            name="email"
+            placeholder="you@example.com"
+            required
+            label="Email"
+          />
+          <FormInput
             name="password"
             placeholder="Your password"
-            minLength={6}
             required
+            label="Password"
+            type="password"
           />
+
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>

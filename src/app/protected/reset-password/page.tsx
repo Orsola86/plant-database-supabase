@@ -1,6 +1,7 @@
+import { Heading } from "@/components/atoms/Heading/Heading";
+import { Text } from "@/components/atoms/Text/Text";
 import { FormMessage, Message } from "@/components/atoms/form-message";
-import { Input } from "@/components/atoms/inputs/input";
-import { Label } from "@/components/atoms/label";
+import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { SubmitButton } from "@/components/atoms/submit-button";
 import { resetPasswordAction } from "@/app/actions";
 
@@ -9,25 +10,28 @@ export default async function ResetPassword(props: {
 }) {
   const searchParams = await props.searchParams;
   return (
-    <form className="flex flex-col gap-2 p-4 [&>input]:mb-4">
-      <h1 className="text-2xl font-medium">Reset password</h1>
-      <p className="text-sm text-foreground/60">
+    <form className="flex flex-1 flex-col gap-3 text-foreground [&>input]:mb-5">
+      <Heading as="h1">Reset Password</Heading>
+      <Text styledAs="body-md-regular">
         Please enter your new password below.
-      </p>
-      <Label htmlFor="password">New password</Label>
-      <Input
-        type="password"
-        name="password"
-        placeholder="New password"
-        required
-      />
-      <Label htmlFor="confirmPassword">Confirm password</Label>
-      <Input
-        type="password"
-        name="confirmPassword"
-        placeholder="Confirm password"
-        required
-      />
+      </Text>
+      <div className="mt-12 flex flex-col gap-3 [&>input]:mb-5">
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="New password"
+          required
+          label="Password"
+        />
+        <FormInput
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm password"
+          required
+          label="Confirm password"
+        />
+      </div>
+
       <SubmitButton formAction={resetPasswordAction}>
         Reset password
       </SubmitButton>

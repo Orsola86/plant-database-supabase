@@ -38,8 +38,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={montserrat.className} suppressHydrationWarning>
       <body className="h-screen bg-background text-foreground">
-        <nav className="flex h-16 w-full justify-center border-b border-b-foreground/10">
-          <div className="container flex w-full items-center justify-end p-3 px-5 text-sm">
+        <nav className="flex w-full justify-center border-b border-b-foreground/10">
+          <div className="container flex w-full items-center justify-end py-5 text-sm">
             {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
           </div>
         </nav>

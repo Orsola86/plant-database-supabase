@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { FormMessage, Message } from "@/components/atoms/form-message";
-import { Input } from "@/components/atoms/inputs/input";
-import { Label } from "@/components/atoms/label";
+import { Heading } from "@/components/atoms/Heading/Heading";
+import { Text } from "@/components/atoms/Text/Text";
+import { FormMessage, type Message } from "@/components/atoms/form-message";
+import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { SubmitButton } from "@/components/atoms/submit-button";
 import { signInAction } from "@/app/actions";
 
@@ -20,31 +21,33 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 
   return (
     <form className="flex flex-1 flex-col">
-      <h1 className="text-2xl font-medium">Sign in</h1>
-      <p className="text-sm text-foreground">
+      <Heading as="h1">Sign in</Heading>
+      <Text styledAs="body-md-regular">
         Don`t have an account?{" "}
         <Link className="font-medium text-foreground underline" href="/sign-up">
           Sign up
         </Link>
-      </p>
-      <div className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
-        <Label htmlFor="email">Email</Label>
-        <Input name="email" placeholder="you@example.com" required />
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <Link
-            className="text-xs text-foreground underline"
-            href="/forgot-password"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-        <Input
-          type="password"
+      </Text>
+      <div className="mt-12 flex flex-col gap-3 [&>input]:mb-5">
+        <FormInput
+          name="email"
+          placeholder="you@example.com"
+          required
+          label="Email"
+        />
+
+        <FormInput
           name="password"
+          type="password"
           placeholder="Your password"
           required
+          label="Password"
+          helpLink={{
+            text: "Forgot Password?",
+            href: "/forgot-password",
+          }}
         />
+
         <SubmitButton pendingText="Signing In..." formAction={signInAction}>
           Sign in
         </SubmitButton>
