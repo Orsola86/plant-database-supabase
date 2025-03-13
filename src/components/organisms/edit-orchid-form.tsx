@@ -1,6 +1,7 @@
 "use client";
 
 import { Toaster } from "sonner";
+import Image from "next/image";
 import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { FILES_EXTENSIONS, MAX_FILE_SIZE } from "@/utils/constants";
@@ -8,7 +9,8 @@ import { Button } from "@/components/atoms/button";
 import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { FormMessage } from "@/components/atoms/inputs/FormMessage";
 import { Card, CardContent } from "@/components/molecules/card";
-import { addOrchid } from "@/app/orchid-action/orchidActions";
+import { updateOrchid } from "@/app/orchid-action/orchidActions";
+import { Tables } from "@/types/database.types";
 import {
   FileUploadError,
   FormUploadInput,
@@ -25,12 +27,16 @@ interface OrchidFormState {
   };
 }
 
-export default function AddOrchidForm() {
+export default function EditOrchidForm(props: Tables<"plant-taxonomy">) {
   const initialState: OrchidFormState = { message: null, errors: {} };
-  const [state, dispatch, isPending] = useActionState(addOrchid, initialState);
+  const [state, dispatch, isPending] = useActionState(
+    updateOrchid,
+    initialState
+  );
 
   const [file, setFile] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [keepExistingImage, setKeepExistingImage] = useState(true);
 
   const handleFileChange = (
     newFile: File | null,
@@ -38,6 +44,11 @@ export default function AddOrchidForm() {
   ) => {
     // Update the file state
     setFile(newFile);
+
+    // If a new file is selected, we're not keeping the existing image
+    if (newFile) {
+      setKeepExistingImage(false);
+    }
 
     // If there's an error, update the form error state
     if (error) {
@@ -50,6 +61,12 @@ export default function AddOrchidForm() {
   const handleSubmit = async (formData: FormData) => {
     // Clear any previous form errors
     setFormError(null);
+
+    // Add the plant ID to the form data
+    formData.append("id", props?.id);
+
+    // Add the keepExistingImage flag
+    formData.append("keepExistingImage", keepExistingImage.toString());
 
     // If we have a file, add it to the FormData
     if (file) {
@@ -68,9 +85,8 @@ export default function AddOrchidForm() {
   };
 
   return (
-    <>
+    <div>
       <Toaster position="bottom-right" />
-      <h1 className="mb-8 text-2xl font-bold">Aggiungi Orchidea</h1>
 
       <Card>
         <CardContent className="pt-6">
@@ -80,13 +96,14 @@ export default function AddOrchidForm() {
                 name="family"
                 label="Famiglia"
                 errorMessage={state?.errors?.family || []}
-                defaultValue="Orchidaceae"
+                defaultValue={props?.family || ""}
               />
 
               <FormInput
                 name="genus"
                 label="Genere"
                 errorMessage={state?.errors?.genus || []}
+                defaultValue={props?.genus || ""}
                 placeholder="Es. Phalaenopsis"
               />
 
@@ -94,13 +111,34 @@ export default function AddOrchidForm() {
                 name="species"
                 label="Specie"
                 errorMessage={state?.errors?.species || []}
+                defaultValue={props?.species || ""}
                 placeholder="Es. Phalaenopsis gibbosa"
                 required
               />
 
+              {props?.image_url && (
+                <div className="mb-4">
+                  <p className="mb-2 text-sm font-medium text-gray-700">
+                    Immagine attuale:
+                  </p>
+                  <div className="relative h-32 w-32 overflow-hidden rounded-md">
+                    <Image
+                      src={props?.image_url}
+                      alt={props?.species || ""}
+                      fill
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+
               <FormUploadInput
                 name="image"
-                label="Immagine dell'orchidea"
+                label={
+                  props?.image_url
+                    ? "Sostituisci immagine (opzionale)"
+                    : "Aggiungi immagine"
+                }
                 onChange={handleFileChange}
                 maxSize={MAX_FILE_SIZE}
                 errorMessage={state?.errors?.image_url || []}
@@ -123,15 +161,15 @@ export default function AddOrchidForm() {
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Caricamento in corso...
+                  Aggiornamento in corso...
                 </>
               ) : (
-                "Aggiungi orchidea"
+                "Salva modifiche"
               )}
             </Button>
           </form>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }

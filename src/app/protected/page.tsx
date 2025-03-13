@@ -24,9 +24,9 @@ export default async function ProtectedPage() {
     <>
       <Hero />
       <div className="container py-16">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col-reverse gap-4 md:flex-row">
           <h2 className="font-serif text-2xl font-bold">La tua collezione</h2>
-          <Link href="/protected/add-orchid">
+          <Link href="/protected/add-orchid" className="ml-auto">
             <Button className="flex items-center gap-2">
               <PlusCircle className="h-5 w-5" />
               Aggiungi alla collezione

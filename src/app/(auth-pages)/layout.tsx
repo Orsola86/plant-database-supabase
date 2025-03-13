@@ -3,5 +3,13 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="container flex h-full items-center">{children}</main>;
+  return (
+    <main className="container h-full py-16">
+      <div className="default-grid">
+        <div className="col-span-full md:col-span-6 md:col-start-4">
+          {children}
+        </div>
+      </div>
+    </main>
+  );
 }

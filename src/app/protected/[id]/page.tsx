@@ -102,12 +102,20 @@ export default async function PlantDetailPage({
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="container py-12">
-        <Link href="/" className="mb-8 inline-block">
-          <Button variant="outline" size="sm" className="group">
-            <ArrowLeft className="mr-2 size-4 transition-transform group-hover:-translate-x-1" />
-            Torna alla collezione
-          </Button>
-        </Link>
+        <div className="mb-8 flex flex-col gap-4 md:flex-row">
+          <Link href="/" className="inline-block">
+            <Button variant="outline" size="sm" className="group">
+              <ArrowLeft className="mr-2 size-4 transition-transform group-hover:-translate-x-1" />
+              Torna alla collezione
+            </Button>
+          </Link>
+
+          <Link href={`/protected/${id}/edit`} className="ml-auto">
+            <Button variant="outline" size="sm">
+              Modifica orchidea
+            </Button>
+          </Link>
+        </div>
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl shadow-xl">
