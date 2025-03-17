@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import handleImageUpload from "@/utils/functions/handle-image-upload";
 import { createClient } from "@/utils/supabase/server";
 
+const ITEMS_PER_PAGE = 3;
+
 export type OrchidFormState = {
   errors?: {
     family?: string[];
@@ -291,4 +293,65 @@ export const getPlantById = async (id: string) => {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of invoices.");
   }
+};
+
+export const fetchPlants = async (
+  query: string,
+  family: string,
+  genus: string,
+  currentPage: number
+) => {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return null;
+  }
+
+  // Calculate pagination offset
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  // Start building the query
+  let dbQuery = supabase
+    .from("plant-taxonomy")
+    .select("*", { count: "exact" })
+    .eq("user_id", user.id);
+
+  // Add search filter if query exists
+  if (query) {
+    dbQuery = dbQuery.or(
+      `family.ilike.%${query}%,genus.ilike.%${query}%,species.ilike.%${query}%`
+    );
+  }
+
+  // Add family filter if it exists
+  if (family) {
+    dbQuery = dbQuery.eq("family", family);
+  }
+
+  // Add genus filter if it exists
+  if (genus) {
+    dbQuery = dbQuery.eq("genus", genus);
+  }
+
+  // Add pagination
+  const {
+    data: plants,
+    error,
+    count,
+  } = await dbQuery
+    .range(offset, offset + ITEMS_PER_PAGE - 1)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching plants:", error);
+    return { plants: [], totalPages: 0 };
+  }
+
+  const totalPages = Math.ceil((count || 0) / ITEMS_PER_PAGE);
+
+  return { plants, totalPages };
 };

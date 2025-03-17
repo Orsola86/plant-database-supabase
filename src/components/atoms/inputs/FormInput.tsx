@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { LucideIcon } from "lucide-react";
 import { FormMessage } from "@/components/atoms/inputs/FormMessage";
 import { Input, type InputProps } from "@/components/atoms/inputs/input";
 import { Label } from "@/components/atoms/label";
 
-interface FormInputProps extends InputProps {
+interface FormInputProps extends Omit<InputProps, "icon"> {
   type?: InputProps["type"];
   label: string;
   name: string;
@@ -13,6 +14,8 @@ interface FormInputProps extends InputProps {
     text: string;
     href: string;
   };
+  icon?: LucideIcon;
+  iconPosition?: "left" | "right";
 }
 
 export const FormInput = ({
@@ -21,10 +24,12 @@ export const FormInput = ({
   errorMessage,
   helpText,
   helpLink,
+  icon,
+  iconPosition = "left",
   ...rest
 }: FormInputProps) => {
   return (
-    <div className="space-y-2">
+    <div className="w-full space-y-2">
       <div className="flex items-center justify-between">
         <Label htmlFor={name}>{label}</Label>
         {helpLink && (
@@ -39,6 +44,8 @@ export const FormInput = ({
         id={name}
         name={name}
         aria-describedby={`${name}-error`}
+        icon={icon}
+        iconPosition={iconPosition}
       />
       <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
         {!!errorMessage?.length &&

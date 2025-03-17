@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Button } from "@/components/atoms/button";
-import AddOrchidForm from "@/components/organisms/add-orchid-form";
+import AddOrchidForm from "@/components/organisms/AddOrchidForm";
 
 export default async function AddOrchidPage() {
   const supabase = await createClient();

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/atoms/button";
-import EditOrchidForm from "@/components/organisms/edit-orchid-form";
+import EditOrchidForm from "@/components/organisms/EditOrchidForm";
 import { getPlantById } from "@/app/orchid-action/orchidActions";
 
 interface EditOrchidPageProps {

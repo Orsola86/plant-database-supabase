@@ -1,14 +1,26 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { PlusCircle } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Button } from "@/components/atoms/button";
-import { PlantCard } from "@/components/molecules/plant-card";
-import Hero from "@/components/organisms/hero";
-import { getCollections } from "@/app/orchid-action/orchidActions";
+import Search from "@/components/atoms/inputs/search";
+import Filters from "@/components/molecules/filters";
+import Hero from "@/components/organisms/Hero";
+import PlantCollection from "@/components/organisms/PlantCollection/PlantCollection";
+import PlantCollectionSkeleton from "@/components/organisms/PlantCollection/PlantCollectionSkeleton";
 
-export default async function ProtectedPage() {
+export default async function ProtectedPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{
+    query?: string;
+    page?: string;
+    family?: string;
+    genus?: string;
+  }>;
+}) {
   const supabase = await createClient();
 
   const {
@@ -18,14 +30,41 @@ export default async function ProtectedPage() {
   if (!user) {
     return redirect("/sign-in");
   }
+  const {
+    query = "",
+    family = "",
+    genus = "",
+    page = "1",
+  } = (await searchParams) || {};
+  const currentPage = Number(page) || 1;
 
-  const orchids = await getCollections();
+  // Fetch unique families and genera for filters
+  const { data: familiesData } = await supabase
+    .from("plant-taxonomy")
+    .select("family")
+    .eq("user_id", user.id)
+    .not("family", "is", null);
+
+  const { data: generaData } = await supabase
+    .from("plant-taxonomy")
+    .select("genus")
+    .eq("user_id", user.id)
+    .not("genus", "is", null);
+
+  const families = [...new Set(familiesData?.map((item) => item.family))];
+  const genera = [...new Set(generaData?.map((item) => item.genus))];
 
   return (
     <>
       <Hero />
       <div className="container py-16">
-        <div className="mb-8 flex flex-col-reverse gap-4 md:flex-row">
+        <div className="mb-24">
+          <Search placeholder="Cerca nella collezione..." />
+          <div className="mt-4">
+            <Filters families={families} genera={genera} />
+          </div>
+        </div>
+        <div className="mb-16 flex flex-col-reverse gap-4 md:flex-row">
           <Heading as="h2">La tua collezione</Heading>
           <Link href="/protected/add-orchid" className="ml-auto">
             <Button className="flex items-center gap-2">
@@ -34,15 +73,15 @@ export default async function ProtectedPage() {
             </Button>
           </Link>
         </div>
-        <div className="default-grid">
-          {orchids?.map((orchid) => (
-            <PlantCard
-              className="col-span-full md:col-span-6 lg:col-span-4"
-              plant={orchid}
-              key={orchid.id}
-            />
-          ))}
-        </div>
+
+        <Suspense fallback={<PlantCollectionSkeleton />}>
+          <PlantCollection
+            query={query}
+            family={family}
+            genus={genus}
+            currentPage={currentPage}
+          />
+        </Suspense>
       </div>
     </>
   );
