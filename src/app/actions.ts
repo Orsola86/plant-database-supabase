@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { encodedRedirect } from "@/utils/utils";
 
@@ -53,7 +54,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect(PAGES_PATH.PROTECTED);
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {

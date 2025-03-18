@@ -39,8 +39,8 @@ export const CareCard = ({
           />
         </div>
         <div>
-          <Text styledAs="caption-md-bold">{title}</Text>
-          <Text styledAs="caption-sm-regular">{description}</Text>
+          <Text styledAs="body-md-bold">{title}</Text>
+          <Text styledAs="body-sm-regular">{description}</Text>
         </div>
       </CardContent>
     </Card>

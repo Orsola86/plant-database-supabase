@@ -17,7 +17,7 @@ export default async function ForgotPassword(props: {
         <div>
           <Heading as="h1">Reset Password</Heading>
           <Text styledAs="body-md-regular">
-            Already have an account?{" "}
+            Already have an account?
             <Link className="text-primary underline" href="/sign-in">
               Sign in
             </Link>

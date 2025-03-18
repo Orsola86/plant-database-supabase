@@ -4,7 +4,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "type": "npx supabase gen types typescript --project-id whadivgijksxiaqqmnle --schema public > types/database.types.ts",
+    "type": "npx supabase gen types typescript --project-id whadivgijksxiaqqmnle --schema public > src/types/database.types.ts",
     "lint": "next lint",
     "check-format": "prettier --check .",
     "check-lint": "eslint . --ext .ts,.tsx",

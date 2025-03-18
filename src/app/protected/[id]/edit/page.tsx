@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/atoms/button";
 import EditOrchidForm from "@/components/organisms/EditOrchidForm";
@@ -25,14 +26,14 @@ export default async function EditOrchidPage({ params }: EditOrchidPageProps) {
   const plant = await getPlantById(id);
 
   if (!plant) {
-    return redirect("/protected");
+    return redirect(PAGES_PATH.PROTECTED);
   }
 
   return (
     <div className="container py-16">
       <div className="default-grid">
         <div className="mb-8 flex flex-col-reverse items-center gap-4 md:flex-row">
-          <Link href={`/protected/${id}`} className="ml-auto">
+          <Link href={`${PAGES_PATH.PROTECTED}/${id}`} className="ml-auto">
             <Button
               variant="outline"
               type="button"
@@ -47,7 +48,7 @@ export default async function EditOrchidPage({ params }: EditOrchidPageProps) {
           Modifica orchidea: {plant.species}
         </h1>
         <div className="col-span-full md:col-span-6 md:col-start-4">
-          <EditOrchidForm {...plant} />
+          <EditOrchidForm orchid={plant} />
         </div>
       </div>
     </div>

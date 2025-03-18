@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
@@ -16,7 +17,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
     data: { user },
   } = await supabase.auth.getUser();
   if (user) {
-    return redirect("/protected");
+    return redirect(PAGES_PATH.PROTECTED);
   }
 
   return (

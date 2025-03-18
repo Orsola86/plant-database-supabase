@@ -2,10 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { Button } from "@/components/atoms/button";
+import { CareCard } from "@/components/molecules/CareCard";
 import { getPlantById } from "@/app/orchid-action/orchidActions";
 import plantPlaceholderImg from "../../../../public/plant-7396967_1920.jpg";
 
@@ -97,6 +99,20 @@ export default async function PlantDetailPage({
     }
   );
 
+  const {
+    image_url: imageUrl,
+    family,
+    species,
+    description,
+    light,
+    water,
+    temperature,
+    humidity,
+    origin,
+    bloomingSeason,
+    rest,
+  } = plant || {};
+
   if (!plant) {
     return <div className="container py-10">Orchidea non trovata</div>;
   }
@@ -105,14 +121,17 @@ export default async function PlantDetailPage({
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="container py-12">
         <div className="mb-8 flex flex-col gap-4 md:flex-row">
-          <Link href="/" className="inline-block">
+          <Link href={PAGES_PATH.PROTECTED} className="inline-block">
             <Button variant="outline" size="sm" className="group">
               <ArrowLeft className="mr-2 size-4 transition-transform group-hover:-translate-x-1" />
               Torna alla collezione
             </Button>
           </Link>
 
-          <Link href={`/protected/${id}/edit`} className="ml-auto">
+          <Link
+            href={`${PAGES_PATH.PROTECTED}/${id}${PAGES_PATH.EDIT}`}
+            className="ml-auto"
+          >
             <Button variant="outline" size="sm">
               Modifica orchidea
             </Button>
@@ -122,8 +141,8 @@ export default async function PlantDetailPage({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div className="relative aspect-square w-full overflow-hidden rounded-2xl shadow-xl">
             <Image
-              src={plant?.image_url || plantPlaceholderImg.src}
-              alt={plant?.species || ""}
+              src={imageUrl || plantPlaceholderImg.src}
+              alt={species || ""}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -140,64 +159,74 @@ export default async function PlantDetailPage({
                 Aggiunta il {formattedDate}
               </Text>
               <Heading as="h1" className="mt-2 font-bold">
-                {plant?.species}
+                {species}
               </Heading>
               <Text
                 styledAs="body-md-regular"
                 className="mt-1 italic text-muted-foreground"
               >
-                {plant?.family}
+                {family}
               </Text>
             </div>
 
-            {/* <div className="prose prose-green max-w-none">
-              <p>{details?.description}</p>
+            {description && (
+              <Text styledAs="body-lg-regular" className="mt-1">
+                {description}
+              </Text>
+            )}
+            <div className="flex flex-col gap-4 pt-4">
+              {origin && (
+                <div>
+                  <Text styledAs="body-md-bold">Origine</Text>
+                  <Text styledAs="body-sm-regular">{origin}</Text>
+                </div>
+              )}
+              {bloomingSeason && (
+                <div>
+                  <Text styledAs="body-md-bold">Fioritura</Text>
+                  <Text styledAs="body-sm-regular">{bloomingSeason}</Text>
+                </div>
+              )}
+              {rest && (
+                <div>
+                  <Text styledAs="body-md-bold">Riposo</Text>
+                  <Text styledAs="body-sm-regular">{rest}</Text>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
-              <CareCard
-                icon={{ color: "green", name: "Sun" }}
-                title="Luce"
-                description={details.care?.light}
-              />
+              {light && (
+                <CareCard
+                  icon={{ color: "green", name: "Sun" }}
+                  title="Luce"
+                  description={light}
+                />
+              )}
 
-              <CareCard
-                icon={{ color: "blue", name: "Droplets" }}
-                title="Acqua"
-                description={details.care?.water}
-              />
-              <CareCard
-                icon={{ color: "red", name: "Thermometer" }}
-                title="Temperatura"
-                description={details.care?.temperature}
-              />
-              <CareCard
-                icon={{ color: "purple", name: "Wind" }}
-                title="Umidità"
-                description={details.care?.humidity}
-              />
+              {water && (
+                <CareCard
+                  icon={{ color: "blue", name: "Droplets" }}
+                  title="Acqua"
+                  description={water}
+                />
+              )}
+              {temperature && (
+                <CareCard
+                  icon={{ color: "red", name: "Thermometer" }}
+                  title="Temperatura"
+                  description={temperature}
+                />
+              )}
+
+              {humidity && (
+                <CareCard
+                  icon={{ color: "purple", name: "Wind" }}
+                  title="Umidità"
+                  description={humidity}
+                />
+              )}
             </div>
-
-            <div className="grid grid-cols-3 gap-4 pt-4">
-              <div>
-                <p className="text-sm font-medium">Origine</p>
-                <p className="text-sm text-muted-foreground">
-                  {details?.origin}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Fioritura</p>
-                <p className="text-sm text-muted-foreground">
-                  {details?.bloomingSeason}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Difficoltà</p>
-                <p className="text-sm text-muted-foreground">
-                  {details?.difficulty}
-                </p>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

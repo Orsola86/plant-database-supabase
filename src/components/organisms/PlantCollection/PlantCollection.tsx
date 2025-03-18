@@ -1,5 +1,6 @@
+import { Text } from "@/components/atoms/Text/Text";
+import { PlantCard } from "@/components/molecules/PlantCard";
 import Pagination from "@/components/molecules/pagination";
-import { PlantCard } from "@/components/molecules/plant-card";
 import { fetchPlants } from "@/app/orchid-action/orchidActions";
 
 export default async function PlantCollection({
@@ -19,10 +20,10 @@ export default async function PlantCollection({
   if (plants?.length === 0) {
     return (
       <div className="py-8 text-center">
-        <p className="text-lg text-gray-600">
+        <Text styledAs="body-md-bold" className="text-gray-600">
           Nessuna pianta trovata. Prova a modificare i filtri o aggiungine di
           nuove.
-        </p>
+        </Text>
       </div>
     );
   }
@@ -32,7 +33,7 @@ export default async function PlantCollection({
       <div className="default-grid">
         {plants?.map((plant) => (
           <PlantCard
-            className="col-span-full md:col-span-6 lg:col-span-4"
+            className="col-span-full md:col-span-4 lg:col-span-3"
             plant={plant}
             key={plant.id}
           />

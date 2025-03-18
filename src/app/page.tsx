@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { Heading } from "../components/atoms/Heading/Heading";
 
@@ -8,7 +9,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   if (user) {
-    return redirect("/protected");
+    return redirect(PAGES_PATH.PROTECTED);
   }
 
   return (

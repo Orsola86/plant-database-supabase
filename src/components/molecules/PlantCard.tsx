@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { PAGES_PATH } from "@/utils/constants";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/molecules/card";
 import { Tables } from "@/types/database.types";
@@ -18,9 +19,9 @@ export function PlantCard({
 }) {
   return (
     <Link
-      href={`/protected/${plant?.id}`}
+      href={`${PAGES_PATH.PROTECTED}/${plant?.id}`}
       className={cn(
-        "block transition-all duration-300 hover:scale-105",
+        "block transition-all duration-300 hover:scale-[1.02]",
         className
       )}
     >

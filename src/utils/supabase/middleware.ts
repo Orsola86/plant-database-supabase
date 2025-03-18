@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { PAGES_PATH } from "../constants";
 import { createServerClient } from "@supabase/ssr";
 
 export const updateSession = async (request: NextRequest) => {
@@ -40,12 +41,15 @@ export const updateSession = async (request: NextRequest) => {
     const user = await supabase.auth.getUser();
 
     // protected routes
-    if (request.nextUrl.pathname.startsWith("/protected") && user.error) {
+    if (
+      request.nextUrl.pathname.startsWith(PAGES_PATH.PROTECTED) &&
+      user.error
+    ) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
     if (request.nextUrl.pathname === "/" && !user.error) {
-      return NextResponse.redirect(new URL("/protected", request.url));
+      return NextResponse.redirect(new URL(PAGES_PATH.PROTECTED, request.url));
     }
 
     return response;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { PlusCircle } from "lucide-react";
+import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Button } from "@/components/atoms/button";
@@ -66,7 +67,7 @@ export default async function ProtectedPage({
         </div>
         <div className="mb-16 flex flex-col-reverse gap-4 md:flex-row">
           <Heading as="h2">La tua collezione</Heading>
-          <Link href="/protected/add-orchid" className="ml-auto">
+          <Link href={PAGES_PATH.PROTECTED_ADD_ORCHID} className="ml-auto">
             <Button className="flex items-center gap-2">
               <PlusCircle className="h-5 w-5" />
               Aggiungi alla collezione

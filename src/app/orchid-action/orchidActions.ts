@@ -3,30 +3,48 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { PAGES_PATH } from "@/utils/constants";
 import handleImageUpload from "@/utils/functions/handle-image-upload";
 import { createClient } from "@/utils/supabase/server";
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 12;
 
 export type OrchidFormState = {
   errors?: {
+    bloomingSeason?: string[];
+    description?: string[];
     family?: string[];
     genus?: string[];
-    species?: string[];
+    humidity?: string[];
     image_url?: string[];
+    light?: string[];
+    origin?: string[];
+    rest?: string[];
+    species?: string[];
+    temperature?: string[];
+    water?: string[];
   };
   message?: string | null;
 };
-// Schema di validazione per il form
+
+// Validation schema for the form
 const OrchidFormSchema = z.object({
+  bloomingSeason: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
   family: z.string().min(1, "La famiglia è obbligatoria"),
   genus: z.string().optional(),
-  species: z.string().min(1, "La specie è obbligatoria"),
+  humidity: z.string().optional().nullable(),
   image_url: z
     .string()
     .url("L'URL dell'immagine non è valido")
     .optional()
     .or(z.literal("")),
+  light: z.string().optional().nullable(),
+  origin: z.string().optional().nullable(),
+  rest: z.string().optional().nullable(),
+  species: z.string().min(1, "La specie è obbligatoria"),
+  temperature: z.string().optional().nullable(),
+  water: z.string().optional().nullable(),
 });
 
 export async function addOrchid(
@@ -35,7 +53,6 @@ export async function addOrchid(
 ): Promise<OrchidFormState> {
   try {
     const supabase = await createClient();
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -47,29 +64,35 @@ export async function addOrchid(
       };
     }
 
-    // Caricamento immagine prima della validazione
+    // Upload image before validation
     const file = formData.get("file") as File | null;
     let imageUrl = "";
 
     if (file && file.size > 0) {
       const uploadResult = await handleImageUpload(supabase, user.id, file);
-
       if (!uploadResult.success) {
         return {
           message: uploadResult.message,
           errors: { image_url: [uploadResult.message] },
         };
       }
-
       imageUrl = uploadResult.url;
     }
 
-    // Validazione dei dati del form
+    // Validate form data
     const validatedFields = OrchidFormSchema.safeParse({
+      bloomingSeason: formData.get("bloomingSeason"),
+      description: formData.get("description"),
       family: formData.get("family"),
       genus: formData.get("genus"),
-      species: formData.get("species"),
+      humidity: formData.get("humidity"),
       image_url: imageUrl || "",
+      light: formData.get("light"),
+      origin: formData.get("origin"),
+      rest: formData.get("rest"),
+      species: formData.get("species"),
+      temperature: formData.get("temperature"),
+      water: formData.get("water"),
     });
 
     if (!validatedFields.success) {
@@ -81,18 +104,38 @@ export async function addOrchid(
       };
     }
 
-    // Estrazione dei dati validati
-    const { family, genus, species } = validatedFields.data;
+    // Extract validated data
+    const {
+      bloomingSeason,
+      description,
+      family,
+      genus,
+      humidity,
+      light,
+      origin,
+      rest,
+      species,
+      temperature,
+      water,
+    } = validatedFields.data;
 
-    // Inserimento nel database
+    // Insert into database
     try {
       const { error } = await supabase.from("plant-taxonomy").insert([
         {
+          bloomingSeason: bloomingSeason || null,
+          description: description || null,
           family,
           genus: genus || null,
-          species,
+          humidity: humidity || null,
           image_url: imageUrl || null,
+          light: light || null,
+          origin: origin || null,
+          rest: rest || null,
+          species,
+          temperature: temperature || null,
           user_id: user.id,
+          water: water || null,
         },
       ]);
 
@@ -105,7 +148,6 @@ export async function addOrchid(
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Errore sconosciuto";
-
       return {
         message: `Errore durante l'aggiunta dell'orchidea: ${errorMessage}`,
         errors: {},
@@ -114,15 +156,14 @@ export async function addOrchid(
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Errore sconosciuto";
-
     return {
       message: `Errore imprevisto: ${errorMessage}`,
       errors: {},
     };
   }
 
-  revalidatePath("/protected");
-  redirect("/protected");
+  revalidatePath(PAGES_PATH.PROTECTED);
+  redirect(PAGES_PATH.PROTECTED);
 }
 
 export async function updateOrchid(
@@ -131,7 +172,6 @@ export async function updateOrchid(
 ): Promise<OrchidFormState> {
   try {
     const supabase = await createClient();
-
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -143,11 +183,11 @@ export async function updateOrchid(
       };
     }
 
-    // Get the plant ID from the form data
+    // Get plant ID from form data
     const plantId = formData.get("id") as string;
     const keepExistingImage = formData.get("keepExistingImage") === "true";
 
-    // Fetch the current plant data to check ownership
+    // Retrieve current plant data to verify ownership
     const { data: currentPlant, error: fetchError } = await supabase
       .from("plant-taxonomy")
       .select("*")
@@ -161,7 +201,7 @@ export async function updateOrchid(
       };
     }
 
-    // Check if the user is the owner of the plant
+    // Check if user is the owner of the plant
     if (currentPlant.user_id !== user.id) {
       return {
         message: "Non sei autorizzato a modificare questa orchidea",
@@ -169,33 +209,38 @@ export async function updateOrchid(
       };
     }
 
-    // Handle image upload if there's a new file
+    // Handle image upload if a new file is present
     const file = formData.get("file") as File | null;
     let imageUrl = currentPlant.image_url || "";
 
     if (file && file.size > 0) {
       const uploadResult = await handleImageUpload(supabase, user.id, file);
-
       if (!uploadResult.success) {
         return {
           message: uploadResult.message,
           errors: { image_url: [uploadResult.message] },
         };
       }
-
       imageUrl = uploadResult.url;
     } else if (!keepExistingImage) {
       // If user explicitly removed the image
       imageUrl = "";
     }
 
-    // Validate the form data
+    // Validate form data
     const validatedFields = OrchidFormSchema.safeParse({
-      id: plantId,
+      bloomingSeason: formData.get("bloomingSeason"),
+      description: formData.get("description"),
       family: formData.get("family"),
       genus: formData.get("genus"),
-      species: formData.get("species"),
+      humidity: formData.get("humidity"),
       image_url: imageUrl,
+      light: formData.get("light"),
+      origin: formData.get("origin"),
+      rest: formData.get("rest"),
+      species: formData.get("species"),
+      temperature: formData.get("temperature"),
+      water: formData.get("water"),
     });
 
     if (!validatedFields.success) {
@@ -207,18 +252,38 @@ export async function updateOrchid(
       };
     }
 
-    // Extract the validated data
-    const { family, genus, species } = validatedFields.data;
+    // Extract validated data
+    const {
+      bloomingSeason,
+      description,
+      family,
+      genus,
+      humidity,
+      light,
+      origin,
+      rest,
+      species,
+      temperature,
+      water,
+    } = validatedFields.data;
 
-    // Update the database
+    // Update database
     try {
       const { error } = await supabase
         .from("plant-taxonomy")
         .update({
+          bloomingSeason: bloomingSeason || null,
+          description: description || null,
           family,
           genus: genus || null,
-          species,
+          humidity: humidity || null,
           image_url: imageUrl || null,
+          light: light || null,
+          origin: origin || null,
+          rest: rest || null,
+          species,
+          temperature: temperature || null,
+          water: water || null,
         })
         .eq("id", plantId);
 
@@ -231,7 +296,6 @@ export async function updateOrchid(
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Errore sconosciuto";
-
       return {
         message: `Errore durante l'aggiornamento dell'orchidea: ${errorMessage}`,
         errors: {},
@@ -240,16 +304,15 @@ export async function updateOrchid(
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "Errore sconosciuto";
-
     return {
       message: `Errore imprevisto: ${errorMessage}`,
       errors: {},
     };
   }
 
-  revalidatePath("/protected");
-  revalidatePath(`/protected/${formData.get("id")}`);
-  redirect(`/protected/${formData.get("id")}`);
+  revalidatePath(PAGES_PATH.PROTECTED);
+  revalidatePath(`${PAGES_PATH.PROTECTED}/${formData.get("id")}`);
+  redirect(`${PAGES_PATH.PROTECTED}/${formData.get("id")}`);
 }
 
 export const getCollections = async () => {
