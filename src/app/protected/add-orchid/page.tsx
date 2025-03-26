@@ -1,22 +1,10 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Button } from "@/components/atoms/button";
 import AddOrchidForm from "@/components/organisms/AddOrchidForm";
 
 export default async function AddOrchidPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
   return (
     <div className="container py-16">
       <div className="default-grid">

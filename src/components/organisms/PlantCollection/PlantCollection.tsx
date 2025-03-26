@@ -1,7 +1,7 @@
 import { Text } from "@/components/atoms/Text/Text";
 import { PlantCard } from "@/components/molecules/PlantCard";
 import Pagination from "@/components/molecules/pagination";
-import { fetchPlants } from "@/app/orchid-action/orchidActions";
+import { getUserPlantsWithCache } from "@/app/orchid-action/orchidActions";
 
 export default async function PlantCollection({
   query,
@@ -15,7 +15,7 @@ export default async function PlantCollection({
   currentPage: number;
 }) {
   const { plants, totalPages } =
-    (await fetchPlants(query, family, genus, currentPage)) || {};
+    (await getUserPlantsWithCache(query, family, genus, currentPage)) || {};
 
   if (plants?.length === 0) {
     return (

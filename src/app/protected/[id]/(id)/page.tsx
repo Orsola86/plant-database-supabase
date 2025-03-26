@@ -1,15 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { PAGES_PATH } from "@/utils/constants";
-import { createClient } from "@/utils/supabase/server";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { Button } from "@/components/atoms/button";
 import { CareCard } from "@/components/molecules/CareCard";
-import { getPlantById } from "@/app/orchid-action/orchidActions";
-import plantPlaceholderImg from "../../../../public/plant-7396967_1920.jpg";
+import { getPlantByIdWithCache } from "@/app/orchid-action/orchidActions";
+import plantPlaceholderImg from "../../../../../public/plant-7396967_1920.jpg";
 
 // // Informazioni aggiuntive per ogni orchidea
 // const plantDetails = {
@@ -75,19 +73,9 @@ interface PlantDetailPageProps {
 export default async function PlantDetailPage({
   params,
 }: PlantDetailPageProps) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
   const id = (await params).id || "";
 
-  const plant = await getPlantById(id || "");
+  const plant = await getPlantByIdWithCache(id || "");
 
   // const details = plantDetails[plant?.id as keyof typeof plantDetails];
   const formattedDate = new Date(plant?.created_at || "").toLocaleDateString(
@@ -147,6 +135,9 @@ export default async function PlantDetailPage({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority
+              loading="eager"
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjFmNWYxIi8+PC9zdmc+"
             />
           </div>
 

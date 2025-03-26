@@ -8,7 +8,7 @@ export default function PlantCollectionSkeleton() {
           key={index}
           className="col-span-full rounded-2xl bg-gray-200 p-4 md:col-span-6 lg:col-span-4"
         >
-          <div className="mb-4 h-48 rounded-xl bg-gray-300"></div>
+          <div className="mb-4 aspect-square w-full rounded-xl bg-gray-300"></div>
           <div className="mb-2 h-4 rounded bg-gray-300"></div>
           <div className="h-4 w-3/4 rounded bg-gray-300"></div>
         </div>

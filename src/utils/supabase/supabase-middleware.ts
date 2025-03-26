@@ -45,7 +45,7 @@ export const updateSession = async (request: NextRequest) => {
       request.nextUrl.pathname.startsWith(PAGES_PATH.PROTECTED) &&
       user.error
     ) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      return NextResponse.redirect(new URL(PAGES_PATH.SIGN_IN, request.url));
     }
 
     if (request.nextUrl.pathname === "/" && !user.error) {

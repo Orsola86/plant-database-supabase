@@ -2,28 +2,18 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { PAGES_PATH } from "@/utils/constants";
-import { createClient } from "@/utils/supabase/server";
 import { Button } from "@/components/atoms/button";
 import EditOrchidForm from "@/components/organisms/EditOrchidForm";
-import { getPlantById } from "@/app/orchid-action/orchidActions";
+import { getPlantByIdWithCache } from "@/app/orchid-action/orchidActions";
 
 interface EditOrchidPageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function EditOrchidPage({ params }: EditOrchidPageProps) {
-  const supabase = await createClient();
   const { id } = await params;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
-  const plant = await getPlantById(id);
+  const plant = await getPlantByIdWithCache(id);
 
   if (!plant) {
     return redirect(PAGES_PATH.PROTECTED);
