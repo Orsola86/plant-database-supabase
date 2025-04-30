@@ -6,7 +6,7 @@ import {
   revalidateTag,
   unstable_cache as unstableCache,
 } from "next/cache";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { redirect } from "next/navigation";
 import { PAGES_PATH } from "@/utils/constants";
 import handleImageUpload from "@/utils/functions/handle-image-upload";
@@ -15,7 +15,7 @@ import {
   createClientWithCookies,
   getCookieStore,
 } from "@/utils/supabase/server";
-import { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -109,47 +109,144 @@ async function saveOrchid(
 
     const file = formData.get("file") as File | null;
     let imageUrl = "";
+    let plantData = {};
 
-    if (!isUpdate || (file && file.size > 0)) {
+    // Se è un aggiornamento, dobbiamo gestire l'immagine in modo diverso
+    if (isUpdate) {
+      const plantId = formData.get("id") as string;
+      const keepExistingImage = formData.get("keepExistingImage") === "true";
+
+      // Se abbiamo un nuovo file, caricalo
+      if (file && file.size > 0) {
+        imageUrl = await handleOrchidImageUpload(supabase, user.id, file);
+
+        // Validazione dei campi con la nuova immagine
+        const validatedFields = OrchidFormSchema.safeParse({
+          bloomingSeason: formData.get("bloomingSeason"),
+          description: formData.get("description"),
+          family: formData.get("family"),
+          genus: formData.get("genus"),
+          humidity: formData.get("humidity"),
+          image_url: imageUrl, // Usa la nuova immagine
+          light: formData.get("light"),
+          origin: formData.get("origin"),
+          rest: formData.get("rest"),
+          species: formData.get("species"),
+          temperature: formData.get("temperature"),
+          water: formData.get("water"),
+        });
+
+        if (!validatedFields.success) {
+          return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Dati mancanti o non validi.",
+          };
+        }
+
+        plantData = validatedFields.data;
+      } else {
+        // Se non c'è un nuovo file e vogliamo mantenere l'immagine esistente
+        if (keepExistingImage) {
+          // Validazione dei campi senza modificare l'immagine
+          const validatedFields = OrchidFormSchema.omit({
+            image_url: true,
+          }).safeParse({
+            bloomingSeason: formData.get("bloomingSeason"),
+            description: formData.get("description"),
+            family: formData.get("family"),
+            genus: formData.get("genus"),
+            humidity: formData.get("humidity"),
+            light: formData.get("light"),
+            origin: formData.get("origin"),
+            rest: formData.get("rest"),
+            species: formData.get("species"),
+            temperature: formData.get("temperature"),
+            water: formData.get("water"),
+          });
+
+          if (!validatedFields.success) {
+            return {
+              errors: validatedFields.error.flatten().fieldErrors,
+              message: "Dati mancanti o non validi.",
+            };
+          }
+
+          plantData = validatedFields.data;
+          // Non includiamo image_url nei dati da aggiornare
+        } else {
+          // Se non vogliamo mantenere l'immagine esistente, impostiamo image_url a null o stringa vuota
+          const validatedFields = OrchidFormSchema.safeParse({
+            bloomingSeason: formData.get("bloomingSeason"),
+            description: formData.get("description"),
+            family: formData.get("family"),
+            genus: formData.get("genus"),
+            humidity: formData.get("humidity"),
+            image_url: "", // Rimuovi l'immagine
+            light: formData.get("light"),
+            origin: formData.get("origin"),
+            rest: formData.get("rest"),
+            species: formData.get("species"),
+            temperature: formData.get("temperature"),
+            water: formData.get("water"),
+          });
+
+          if (!validatedFields.success) {
+            return {
+              errors: validatedFields.error.flatten().fieldErrors,
+              message: "Dati mancanti o non validi.",
+            };
+          }
+
+          plantData = validatedFields.data;
+        }
+      }
+
+      // Esegui l'aggiornamento
+      const { error } = await supabase
+        .from("plant-taxonomy")
+        .update(plantData)
+        .eq("id", plantId);
+
+      if (error) throw new Error(error.message);
+
+      revalidateOrchidCaches(plantId);
+    } else {
+      // Caso di creazione nuova orchidea
       imageUrl = await handleOrchidImageUpload(supabase, user.id, file);
+
+      const validatedFields = OrchidFormSchema.safeParse({
+        bloomingSeason: formData.get("bloomingSeason"),
+        description: formData.get("description"),
+        family: formData.get("family"),
+        genus: formData.get("genus"),
+        humidity: formData.get("humidity"),
+        image_url: imageUrl,
+        light: formData.get("light"),
+        origin: formData.get("origin"),
+        rest: formData.get("rest"),
+        species: formData.get("species"),
+        temperature: formData.get("temperature"),
+        water: formData.get("water"),
+      });
+
+      if (!validatedFields.success) {
+        return {
+          errors: validatedFields.error.flatten().fieldErrors,
+          message: "Dati mancanti o non validi.",
+        };
+      }
+
+      plantData = validatedFields.data;
+
+      // Inserisci la nuova orchidea
+      const { error } = await supabase
+        .from("plant-taxonomy")
+        .insert({ ...plantData, user_id: user.id });
+
+      if (error) throw new Error(error.message);
+
+      revalidateOrchidCaches();
     }
-
-    const validatedFields = OrchidFormSchema.safeParse({
-      bloomingSeason: formData.get("bloomingSeason"),
-      description: formData.get("description"),
-      family: formData.get("family"),
-      genus: formData.get("genus"),
-      humidity: formData.get("humidity"),
-      image_url: imageUrl,
-      light: formData.get("light"),
-      origin: formData.get("origin"),
-      rest: formData.get("rest"),
-      species: formData.get("species"),
-      temperature: formData.get("temperature"),
-      water: formData.get("water"),
-    });
-
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-        message: "Dati mancanti o non validi.",
-      };
-    }
-
-    const plantData = validatedFields.data;
-    const plantId = formData.get("id") as string;
-
-    const dbAction = isUpdate
-      ? supabase.from("plant-taxonomy").update(plantData).eq("id", plantId)
-      : supabase
-          .from("plant-taxonomy")
-          .insert({ ...plantData, user_id: user.id });
-
-    const { error } = await dbAction;
-
-    if (error) throw new Error(error.message);
-
-    revalidateOrchidCaches(isUpdate ? plantId : undefined);
   } catch (error) {
     return {
       message: error instanceof Error ? error.message : "Errore imprevisto",

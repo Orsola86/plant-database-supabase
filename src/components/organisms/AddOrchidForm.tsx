@@ -13,13 +13,15 @@ export default function AddOrchidForm() {
   const [state, dispatch, isPending] = useActionState(addOrchid, initialState);
 
   return (
-    <OrchidForm
-      onSubmit={dispatch}
-      isPending={isPending}
-      state={state}
-      title="Aggiungi Orchidea"
-      submitButtonText="Aggiungi orchidea"
-      loadingText="Caricamento in corso..."
-    />
+    <div className="rounded-xl border border-green-100 bg-white">
+      <OrchidForm
+        onSubmit={dispatch}
+        isPending={isPending}
+        state={state}
+        title="Aggiungi Orchidea"
+        submitButtonText="Aggiungi orchidea"
+        loadingText="Caricamento in corso..."
+      />
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { Toaster } from "sonner";
 import Image from "next/image";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Flower, Loader2 } from "lucide-react";
 import { FILES_EXTENSIONS, MAX_FILE_SIZE } from "@/utils/constants";
 import { Button } from "@/components/atoms/button";
 import { FormInput } from "@/components/atoms/inputs/FormInput";
@@ -13,7 +13,7 @@ import {
   FormUploadInput,
 } from "@/components/atoms/inputs/FormUploadInput";
 import { Card, CardContent } from "@/components/molecules/card";
-import { OrchidFormState } from "@/app/orchid-action/orchidActions";
+import type { OrchidFormState } from "@/app/orchid-action/orchidActions";
 import type { Tables } from "@/types/database.types";
 
 interface OrchidFormProps {
@@ -46,12 +46,16 @@ export function OrchidForm({
     // Update file state
     setFile(newFile);
 
-    // If a new file is selected, we won't keep the existing image
-    if (newFile && initialData?.image_url) {
+    // Se viene selezionato un nuovo file, non mantenere l'immagine esistente
+    if (newFile) {
+      setKeepExistingImage(false);
+    }
+    // Se il file viene rimosso esplicitamente (tramite il pulsante X), non mantenere l'immagine esistente
+    else if (newFile === null && !error) {
       setKeepExistingImage(false);
     }
 
-    // If there's an error, update the form error state
+    // Se c'è un errore, aggiorna lo stato dell'errore del form
     if (error) {
       setFormError(error.message);
     } else {
@@ -88,16 +92,22 @@ export function OrchidForm({
   return (
     <>
       <Toaster position="bottom-right" />
-      {!initialData && <h1 className="mb-8 text-2xl font-bold">{title}</h1>}
-      <Card>
-        <CardContent className="pt-6">
+      {!initialData && (
+        <div className="flex items-center gap-3 bg-green-700 px-6 py-5 text-white">
+          <Flower className="size-10" />
+          <h1 className="text-2xl font-bold">{title}</h1>
+        </div>
+      )}
+      <Card className="border-0 shadow-none">
+        <CardContent className="px-8 pt-8">
           <form action={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
+            <div className="space-y-5">
               <FormInput
                 name="family"
                 label="Famiglia"
                 errorMessage={state?.errors?.family || []}
                 defaultValue={initialData?.family || "Orchidaceae"}
+                className="focus-within:border-green-500 focus-within:ring-green-500"
               />
 
               <FormInput
@@ -106,6 +116,7 @@ export function OrchidForm({
                 errorMessage={state?.errors?.genus || []}
                 defaultValue={initialData?.genus || ""}
                 placeholder="Es. Phalaenopsis"
+                className="focus-within:border-green-500 focus-within:ring-green-500"
               />
 
               <FormInput
@@ -126,53 +137,59 @@ export function OrchidForm({
                 placeholder="Descrizione dell'orchidea"
               />
 
-              <FormInput
-                name="origin"
-                label="Origine"
-                errorMessage={state?.errors?.origin || []}
-                defaultValue={initialData?.origin || ""}
-                placeholder="Es. Sud-est asiatico"
-              />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormInput
+                  name="origin"
+                  label="Origine"
+                  errorMessage={state?.errors?.origin || []}
+                  defaultValue={initialData?.origin || ""}
+                  placeholder="Es. Sud-est asiatico"
+                />
 
-              <FormInput
-                name="bloomingSeason"
-                label="Stagione di fioritura"
-                errorMessage={state?.errors?.bloomingSeason || []}
-                defaultValue={initialData?.bloomingSeason || ""}
-                placeholder="Es. Primavera-Estate"
-              />
+                <FormInput
+                  name="bloomingSeason"
+                  label="Stagione di fioritura"
+                  errorMessage={state?.errors?.bloomingSeason || []}
+                  defaultValue={initialData?.bloomingSeason || ""}
+                  placeholder="Es. Primavera-Estate"
+                />
+              </div>
 
-              <FormInput
-                name="rest"
-                label="Periodo di riposo"
-                errorMessage={state?.errors?.rest || []}
-                defaultValue={initialData?.rest || ""}
-                placeholder="Es. Primavera-Estate"
-              />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormInput
+                  name="rest"
+                  label="Periodo di riposo"
+                  errorMessage={state?.errors?.rest || []}
+                  defaultValue={initialData?.rest || ""}
+                  placeholder="Es. Inverno"
+                />
 
-              <FormInput
-                name="light"
-                label="Luce"
-                errorMessage={state?.errors?.light || []}
-                defaultValue={initialData?.light || ""}
-                placeholder="Es. Luce indiretta brillante"
-              />
+                <FormInput
+                  name="light"
+                  label="Luce"
+                  errorMessage={state?.errors?.light || []}
+                  defaultValue={initialData?.light || ""}
+                  placeholder="Es. Luce indiretta brillante"
+                />
+              </div>
 
-              <FormInput
-                name="water"
-                label="Acqua"
-                errorMessage={state?.errors?.water || []}
-                defaultValue={initialData?.water || ""}
-                placeholder="Es. Moderata, lasciare asciugare tra le annaffiature"
-              />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormInput
+                  name="water"
+                  label="Acqua"
+                  errorMessage={state?.errors?.water || []}
+                  defaultValue={initialData?.water || ""}
+                  placeholder="Es. Moderata, lasciare asciugare"
+                />
 
-              <FormInput
-                name="temperature"
-                label="Temperatura"
-                errorMessage={state?.errors?.temperature || []}
-                defaultValue={initialData?.temperature || ""}
-                placeholder="Es. 18-24°C"
-              />
+                <FormInput
+                  name="temperature"
+                  label="Temperatura"
+                  errorMessage={state?.errors?.temperature || []}
+                  defaultValue={initialData?.temperature || ""}
+                  placeholder="Es. 18-24°C"
+                />
+              </div>
 
               <FormInput
                 name="humidity"
@@ -187,7 +204,10 @@ export function OrchidForm({
                   <p className="mb-2 text-sm font-medium text-gray-700">
                     Immagine attuale:
                   </p>
-                  <div className="relative h-32 w-32 overflow-hidden rounded-md">
+                  <div
+                    className="relative h-40 w-40 overflow-hidden rounded-md border-2 border-green-100
+                      shadow-sm"
+                  >
                     <Image
                       src={initialData.image_url || "/placeholder.svg"}
                       alt={initialData.species || ""}
@@ -211,11 +231,12 @@ export function OrchidForm({
                 helperText={`${FILES_EXTENSIONS.all.image.join(", ")} (max ${Math.round(
                   MAX_FILE_SIZE / (1024 * 1024)
                 )}MB)`}
+                defaultValue={initialData?.image_url || ""}
               />
             </div>
 
             {(state?.message || formError) && (
-              <div className="rounded-md bg-red-50 p-4">
+              <div className="rounded-md border border-red-100 bg-red-50 p-4">
                 {state?.message && <FormMessage error={state.message} />}
                 {formError && <FormMessage error={formError} />}
               </div>
@@ -224,11 +245,11 @@ export function OrchidForm({
             <Button
               type="submit"
               disabled={isPending || !!formError}
-              className="w-full"
+              className="w-full bg-green-700 py-6 text-white hover:bg-green-800"
             >
               {isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   {loadingText}
                 </>
               ) : (
