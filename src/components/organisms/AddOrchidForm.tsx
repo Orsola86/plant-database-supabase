@@ -1,7 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { OrchidFormState, addOrchid } from "@/app/orchid-action/orchidActions";
+import {
+  OrchidFormState,
+  addOrchid,
+} from "@/api/action/orchid-action/orchidActions";
 import { OrchidForm } from "../molecules/OrchidForm";
 
 export default function AddOrchidForm() {

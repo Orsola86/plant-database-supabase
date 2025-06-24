@@ -1,11 +1,11 @@
 "use client";
 
 import { useActionState } from "react";
-import { OrchidForm } from "@/components/molecules/OrchidForm";
 import {
   OrchidFormState,
   updateOrchid,
-} from "@/app/orchid-action/orchidActions";
+} from "@/api/action/orchid-action/orchidActions";
+import { OrchidForm } from "@/components/molecules/OrchidForm";
 import type { Tables } from "@/types/database.types";
 
 interface EditOrchidFormProps {

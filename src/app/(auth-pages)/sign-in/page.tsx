@@ -2,12 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PAGES_PATH } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
+import { signInAction } from "@/api/action/auth-actions";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { FormMessage, type Message } from "@/components/atoms/form-message";
 import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { SubmitButton } from "@/components/atoms/submit-button";
-import { signInAction } from "@/app/actions";
 
 export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams;

@@ -2,10 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { PAGES_PATH } from "@/utils/constants";
+import { getPlantByIdWithCache } from "@/api/action/orchid-action/orchidActions";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Button } from "@/components/atoms/button";
 import EditOrchidForm from "@/components/organisms/EditOrchidForm";
-import { getPlantByIdWithCache } from "@/app/orchid-action/orchidActions";
 
 interface EditOrchidPageProps {
   params: Promise<{ id: string }>;

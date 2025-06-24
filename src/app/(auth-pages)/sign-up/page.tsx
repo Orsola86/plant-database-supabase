@@ -1,11 +1,10 @@
 import Link from "next/link";
+import { signUpAction } from "@/api/action/auth-actions";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { FormMessage, Message } from "@/components/atoms/form-message";
 import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { SubmitButton } from "@/components/atoms/submit-button";
-import { signUpAction } from "@/app/actions";
-import { SmtpMessage } from "../smtp-message";
 
 export default async function Signup(props: {
   searchParams: Promise<Message>;
@@ -51,7 +50,6 @@ export default async function Signup(props: {
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <SmtpMessage />
     </>
   );
 }

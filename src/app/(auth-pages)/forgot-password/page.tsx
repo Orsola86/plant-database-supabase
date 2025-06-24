@@ -1,11 +1,10 @@
 import Link from "next/link";
+import { forgotPasswordAction } from "@/api/action/auth-actions";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { FormMessage, type Message } from "@/components/atoms/form-message";
 import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { SubmitButton } from "@/components/atoms/submit-button";
-import { forgotPasswordAction } from "@/app/actions";
-import { SmtpMessage } from "../smtp-message";
 
 export default async function ForgotPassword(props: {
   searchParams: Promise<Message>;
@@ -37,7 +36,6 @@ export default async function ForgotPassword(props: {
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <SmtpMessage />
     </>
   );
 }

@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PAGES_PATH } from "@/utils/constants";
+import { getPlantByIdWithCache } from "@/api/action/orchid-action/orchidActions";
 import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { Button } from "@/components/atoms/button";
 import { CareCard } from "@/components/molecules/CareCard";
-import { getPlantByIdWithCache } from "@/app/orchid-action/orchidActions";
 import plantPlaceholderImg from "../../../../../public/plant-7396967_1920.jpg";
 
 // // Informazioni aggiuntive per ogni orchidea

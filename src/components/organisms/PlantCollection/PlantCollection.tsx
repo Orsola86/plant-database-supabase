@@ -1,7 +1,7 @@
+import { getUserPlantsWithCache } from "@/api/action/orchid-action/orchidActions";
 import { Text } from "@/components/atoms/Text/Text";
 import { PlantCard } from "@/components/molecules/PlantCard";
 import Pagination from "@/components/molecules/pagination";
-import { getUserPlantsWithCache } from "@/app/orchid-action/orchidActions";
 
 export default async function PlantCollection({
   query,

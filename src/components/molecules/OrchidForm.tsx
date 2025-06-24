@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Flower, Loader2 } from "lucide-react";
 import { FILES_EXTENSIONS, MAX_FILE_SIZE } from "@/utils/constants";
+import type { OrchidFormState } from "@/api/action/orchid-action/orchidActions";
 import { Button } from "@/components/atoms/button";
 import { FormInput } from "@/components/atoms/inputs/FormInput";
 import { FormMessage } from "@/components/atoms/inputs/FormMessage";
@@ -13,7 +14,6 @@ import {
   FormUploadInput,
 } from "@/components/atoms/inputs/FormUploadInput";
 import { Card, CardContent } from "@/components/molecules/card";
-import type { OrchidFormState } from "@/app/orchid-action/orchidActions";
 import type { Tables } from "@/types/database.types";
 
 interface OrchidFormProps {
