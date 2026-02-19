@@ -7,6 +7,7 @@ import { Heading } from "@/components/atoms/Heading/Heading";
 import { Text } from "@/components/atoms/Text/Text";
 import { Button } from "@/components/atoms/button";
 import { CareCard } from "@/components/molecules/CareCard";
+import { DeleteOrchidButton } from "@/components/molecules/DeleteOrchidButton";
 import plantPlaceholderImg from "../../../../../public/plant-7396967_1920.jpg";
 
 // // Informazioni aggiuntive per ogni orchidea
@@ -124,6 +125,7 @@ export default async function PlantDetailPage({
               Modifica orchidea
             </Button>
           </Link>
+          <DeleteOrchidButton plantId={id} plantName={species || ""} />
         </div>
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">

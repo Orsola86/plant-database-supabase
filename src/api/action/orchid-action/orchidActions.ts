@@ -273,6 +273,57 @@ export const updateOrchid = async (
   formData: FormData
 ) => saveOrchid(prevState, formData, true);
 
+// Delete orchid function
+export async function deleteOrchid(
+  id: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const { supabase, user } = await getSupabaseClientAndUser();
+
+    const { data: plant, error: fetchError } = await supabase
+      .from("plant-taxonomy")
+      .select("id, user_id")
+      .eq("id", id)
+      .single();
+
+    if (fetchError) {
+      throw new Error("Pianta non trovata");
+    }
+
+    if (plant.user_id !== user.id) {
+      throw new Error("Non hai i permessi per eliminare questa pianta");
+    }
+
+    const { error } = await supabase
+      .from("plant-taxonomy")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    revalidateTag("plants-collection");
+    revalidateTag("plant-detail");
+    revalidatePath(PAGES_PATH.PROTECTED);
+    revalidatePath(`${PAGES_PATH.PROTECTED}/${id}`);
+
+    return {
+      success: true,
+      message: "Orchidea eliminata con successo",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Errore durante l'eliminazione",
+    };
+  }
+}
+
 export const getPlantByIdWithCache = async (id: string) => {
   const cookieStore = await getCookieStore();
   return getCachedPlantById(id, cookieStore);
@@ -288,14 +339,25 @@ const getCachedPlantById = unstableCache(
       .eq("id", id)
       .single();
 
+    // If we have data, return it
     if (plantCollection) {
       return plantCollection;
     }
 
+    // Handle the specific "no rows found" error
+    if (error && error.code === "PGRST116") {
+      // This means no plant was found with this ID, return null
+      return null;
+    }
+
+    // For any other database errors, log and throw
     if (error) {
       console.error("Database Error:", error);
-      throw new Error("Failed to fetch total number of invoices.");
+      throw new Error("Failed to fetch plant data.");
     }
+
+    // Fallback return null if no data and no error (shouldn't happen)
+    return null;
   },
   ["plant-by-id"],
   { tags: ["plant-detail"] }
