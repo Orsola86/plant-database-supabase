@@ -1,28 +1,39 @@
 # 🌱 Plant Database Supabase
 
-A modern web application built with **Next.js**, **Supabase**, **Tailwind CSS** and **Shadcn/ui** for managing a comprehensive plant database.
+![Status](https://img.shields.io/badge/status-Work%20In%20Progress-orange)
+![Demo](https://img.shields.io/badge/type-Demo-blue)
+
+> 🚧 **Project Status: Early Development / Demo**
+>
+> This project is currently under active development and represents an early-stage demo.
+> Features may change, be incomplete, or introduce breaking changes.
+> Not recommended for production use yet.
+
+A modern web application built with **Next.js**, **Supabase**, **Tailwind CSS**, and **shadcn/ui** for managing a structured and scalable plant database.
 
 ![Plant Database Screenshot](/preview.png)
 
+---
+
 ## 🔗 Quick Links
 
-- [Getting Started](#-getting-started)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Icon System](#icon-system)
-- [Development Tools](#development-tools)
-- [Documentation](#documentation)
-- [Project Management](#project-management)
+* [Features](#-features)
+* [Getting Started](#-getting-started)
+* [Tech Stack](#-tech-stack)
+* [Project Structure](#-project-structure)
+* [Supabase Setup](#-supabase-setup)
+* [Testing & Linting](#-testing--linting)
+* [Environment Variables](#-environment-variables)
 
 ---
 
 ## 🌟 Features
 
-* 🔐 Authentication using [Supabase Auth](https://supabase.com/docs/guides/auth)
+* 🔐 Authentication using Supabase Auth
 * 🌿 CRUD operations for plant records (create, edit, view)
 * 🔍 Search functionality by plant name or description
 * 📄 Detailed plant views with structured information
-* 🎨 Styled with [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com)
+* 🎨 Modern UI styled with Tailwind CSS and shadcn/ui
 * ⚡ Fully functional local development setup
 
 ---
@@ -67,17 +78,22 @@ yarn dev
 pnpm dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) in your browser.
+Visit:
+
+```
+http://localhost:3000
+```
 
 ---
 
 ## 🧱 Tech Stack
 
-* **Framework**: [Next.js](https://nextjs.org)
-* **Backend**: [Supabase](https://supabase.com)
-* **Styling**: [Tailwind CSS](https://tailwindcss.com)
-* **UI Library**: [shadcn/ui](https://ui.shadcn.com)
-* **Internationalization**: [next-intl](https://github.com/amannn/next-intl) (optional)
+* **Framework**: Next.js
+* **Backend / Database**: Supabase
+* **Styling**: Tailwind CSS
+* **UI Components**: shadcn/ui
+* **Internationalization**: next-intl (optional)
+* **Language**: TypeScript
 * **Package Manager**: pnpm (or npm/yarn)
 
 ---
@@ -86,22 +102,22 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```
 src/
-├── app/            # Next.js app router structure
+├── app/            # Next.js App Router structure
 ├── assets/         # Static files (icons, images)
-├── components/     # UI components
-├── lib/            # Supabase client, configs
-├── hooks/          # Custom hooks
-├── types/          # TypeScript types
-├── utils/          # Utility functions
+├── components/     # Reusable UI components
+├── lib/            # Supabase client & configuration
+├── hooks/          # Custom React hooks
+├── types/          # TypeScript type definitions
+├── utils/          # Utility/helper functions
 ```
 
 ---
 
 ## 🔐 Supabase Setup
 
-1. [Sign up at Supabase](https://app.supabase.com)
+1. Sign up at [https://app.supabase.com](https://app.supabase.com)
 2. Create a new project
-3. Set up a `plants` table with desired fields, for example:
+3. Create a `plants` table with fields similar to:
 
 ```sql
 create table plants (
@@ -114,7 +130,7 @@ create table plants (
 );
 ```
 
-4. Copy your Supabase project URL and keys into `.env.local`
+4. Copy your Supabase project URL and anon key into `.env.local`
 
 ---
 
@@ -135,7 +151,7 @@ npm run format
 
 ## 💡 Environment Variables
 
-Create a `.env.local` file and add:
+Create a `.env.local` file:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
