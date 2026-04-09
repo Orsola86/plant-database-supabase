@@ -64,6 +64,7 @@ Rename `.env.example` to `.env.local` and add the required keys:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_PROJECT_ID=your-supabase-project-id
 ```
 
 You can find these in your Supabase dashboard under **Project Settings → API**.
@@ -134,17 +135,17 @@ create table plants (
 
 ---
 
-## 🥪 Testing & Linting
+## 🥪 Quality Checks
 
 ```bash
-# Run tests
-npm run test
-
 # Lint the code
 npm run lint
 
 # Format the code
 npm run format
+
+# Typecheck
+npm run check-types
 ```
 
 ---
@@ -156,6 +157,13 @@ Create a `.env.local` file:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_PROJECT_ID=your-project-id
 ```
 
 You can get these from your Supabase project dashboard under `Settings → API`.
+
+To regenerate Supabase types, run:
+
+```bash
+npm run type
+```

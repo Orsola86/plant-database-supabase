@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -10,17 +11,9 @@ module.exports = {
     "plugin:tailwindcss/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:react-hooks/recommended",
-    "google",
     "prettier",
   ],
-  plugins: [
-    "react",
-    "@typescript-eslint",
-    "eslint-plugin-simple-import-sort",
-    "react-hooks",
-    "tailwindcss",
-    "jsx-a11y",
-  ],
+  plugins: ["@typescript-eslint", "tailwindcss", "jsx-a11y"],
   settings: {
     react: {
       version: "detect",
@@ -29,14 +22,8 @@ module.exports = {
       callees: ["classnames", "clsx"],
     },
   },
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-  },
   rules: {
-    "require-jsdoc": 0,
-    "react/react-in-jsx-scope": 0,
+    "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
@@ -45,12 +32,5 @@ module.exports = {
     "tailwindcss/classnames-order": "warn",
     "tailwindcss/no-custom-classname": "off",
     "jsx-a11y/anchor-is-valid": "off",
-    "jsx-a11y/alt-text": [
-      0,
-      {
-        elements: ["img"],
-        img: ["Image"],
-      },
-    ],
   },
 };
